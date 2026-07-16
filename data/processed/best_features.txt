@@ -1,0 +1,7 @@
+wheel_base
+battery_capacity_avg
+width_mm
+length_mm
+brand_category_encoded
+size_large
+depth_mm

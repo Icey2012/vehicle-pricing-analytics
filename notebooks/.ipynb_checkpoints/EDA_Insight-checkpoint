@@ -1,0 +1,40 @@
+EDA INSIGHT
+
+* handling advice
+- conclusions
+
+1. outliers (numeric features)
+    - outliers are present, but they are real number, just keep them
+
+2. imbalenced (categorical features)
+    * model: Drop - Too many unique values (243), no predictive signal
+    * brand: Group - Keep top 10-15 brands, rest as "Other"
+    * segment: Group - Combine similar types (e.g., SUV variants)
+    * seats: Keep - Rare values (2 seats, 7 seats) carry meaningful price signal
+    * battery_type_clean: Keep - Rare values (BOTH, Other) are informative
+
+3. feature skewness
+    - length\width\wheel_base are left_skewed, do nothing, RF will handle
+    
+4. target skewness
+    - skewness: 3.9; kurtosis: 26.8 (luxury car price data is extremely right-skewed)
+    * log transfomation
+    
+5. correlations between features and target -less importance
+    - battery_type_clean: 0.117
+    - powertrain: ~0.0
+    - year: 0.107
+
+6. correlations between features -highest correlation
+    - has_lidar ↔ ADAS_Level (approx. 1.0)
+    - range_CLTC_avg ↔ battery_capacity_avg (approx. 0.9)
+    - wheel_base ↔ length (approx. 0.9)
+    - width ↔ length (approx. 0.9)
+
+7. why no deep diagnostics
+
+- With only 200 samples and a Random Forest model, deep statistical diagnostics (normality, homoscedasticity, VIF, significance tests, interaction effects) are unnecessary. Random Forest makes no distributional assumptions, handles non-linearity and collinearity natively, and captures interactions automatically. Limited sample size also makes many tests unreliable. Focus on cross-validation and feature importance instead.
+
+    
+
+
