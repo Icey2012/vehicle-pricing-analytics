@@ -12,14 +12,13 @@ Traditional competitive analysis relies on consultants manually building Excel b
 
 ## Key Decisions
 
-| Phase | Decision | Rationale |
+| Phase | Decision / Event | Rationale |
 | :--- | :--- | :--- |
-| Kickoff | 243 records / 80+ brands — is pricing analysis feasible? | Initial instinct said sample is too small. AI was optimistic; the decision proceeded without independent verification of AI's claim. |
-| Data cleaning | How to fill missing wheelbase? | Automotive domain knowledge: wheelbase and length are highly correlated (>0.7). Used linear regression on length_mm to predict missing wheelbase — not mean imputation. |
-| Feature engineering | How to encode 80+ brands? | Target encoding (reasonable attempt at the time). Post-mortem revealed target encoding is unstable under small samples — model over-relied on it as a shortcut. |
-| Modeling diagnosis | Regression R² is low — where to start? | Checked train/test price distribution first (not hyperparameter tuning). Found a 60k RMB mean difference → applied StratifiedShuffleSplit. |
-| Stop signal | When to stop tuning? | Observed that price brackets almost perfectly overlap with vehicle segment — model learned "size = price", not pricing logic. No point continuing. Shifted to systematic post-mortem. |
-| Post-mortem | Can small-sample ML succeed? | Identified 3 inherently friendly scenarios (strong physical laws, pre-trained priors, explicit rules) and 6 remedial techniques. Output a reusable feasibility framework. For this project to succeed: 3000+ records, ≥50 per brand, pairwise same-brand same-segment single-diff samples. |
+| Data Acquisition | Web scraping failed, so decided to use the available 243 records / 80+ brands. Concerned whether pricing analysis is feasible with such limited data. | Relled on AI advice: "Random Forest is not sensitive to 200 samples." Instinct said the sample was too small, but the project launched without independent verification. |
+| Missing Value Handling | Data had many missing values; dropping them would make the sample even sparser, so chose to impute them. | Observed that severely missing columns often had highly correlated features for cross-reference. Example: wheelbase and length had staggered missing values. Based on automotive design knowledge (wheelbase and length are highly linearly correlated), used linear regression to predict and fill each. |
+| Data Cleaning | Original data format was extremely messy — values mixed strings and numbers, some cell values were ranges instead of exact numbers, etc. | Split strings from numbers; replaced range-formatted values with mean or median. |
+| Modeling Diagnosis | Regression R² was abnormally low. Considering the EDA report, the issue was unlikely to be model choice or parameter settings. | Noted that the data was sparse with uneven distribution. Checked whether price distributions between training and test sets were consistent — found a 60k RMB mean difference → applied StratifiedShuffleSplit to calibrate. After checking the classification model, realized price brackets almost perfectly overlap with vehicle segment — the model learned "size = price", not pricing logic. Continuing to tune features or models was pointless. Better to systematically review and strengthen feasibility assessment before formally launching an ML project. |
+| Systematic Review | Can small-sample ML projects succeed at all? | Summarized 3 inherently friendly scenarios (strong physical laws, pre-trained priors, explicit rules) and produced a reusable feasibility judgment framework. For this project to succeed: thousands of valid records, relatively balanced brand distribution, and paired same-brand same-segment single-diff samples. |
 
 ---
 
